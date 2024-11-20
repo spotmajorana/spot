@@ -9,7 +9,8 @@ document.getElementById('spotForm').addEventListener('submit', async function(ev
   }
 
   try {
-    const response = await fetch('http://localhost:3000/api/send-spot', {
+    // Cambia l'URL per usare il server pubblico di Render
+    const response = await fetch('https://server-6rj6.onrender.com/api/send-spot', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
