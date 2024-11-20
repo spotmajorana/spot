@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" type="image/png" href="favicon.png">
+		<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
+		<title>Spot Majorana</title>
+		<style>
+		  body {
+			background-color: #25283D;
+			color: #fff;
+			font-family: 'Urbanist', sans-serif;
+			text-align: center;
+			padding: 20px;
+		  }
+
+		  .form-container {
+			margin: 0 auto;
+			width: 100%;
+			max-width: 400px;
+			background-color: #333;
+			padding: 20px;
+			border-radius: 30px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+			box-sizing: border-box; /* Per includere padding nel calcolo delle dimensioni */
+		  }
+
+		  textarea {
+			width: 100%;
+			margin-bottom: 15px;
+			padding: 10px;
+			border: none;
+			border-radius: 20px;
+			font-family: 'Urbanist', sans-serif;
+			text-align: center;
+			resize: none;
+			height: 150px;
+			box-sizing: border-box;
+		  }
+
+		  input, button {
+			width: 50%;
+			margin-bottom: 15px;
+			padding: 10px;
+			border: none;
+			border-radius: 20px;
+			margin-bottom: -20px;
+		  }
+
+		  button {
+			background-color: #4300FF;
+			color: white;
+			cursor: pointer;
+		  }
+
+		  button:hover {
+			background-color: #4D6FD0;
+		  }
+
+		  .logo {
+			text-align: center;
+			margin-bottom: 30px;
+		  }
+
+		  .logo img {
+			width: 200px;
+		  }
+
+		  .info-container {
+			margin: 30px auto;
+			width: 100%;
+			max-width: 400px;
+			background-color: #333;
+			padding: 30px;
+			border-radius: 30px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+			box-sizing: border-box;
+			text-align: center; 
+		  }
+
+		  .info-container p {
+			margin: 10px 0;
+		  }
+
+		  /* Media query per schermi più piccoli */
+		  @media screen and (max-width: 496px) {
+			.form-container, .info-container {
+			  width: 90%; /* Impostiamo la larghezza al 90% dello schermo per schermi piccoli */
+			  max-width: none; /* Rimuoviamo il limite di larghezza massima */
+			}
+		  }
+		</style>
+	</head>
+	<body>
+		<div class="logo">
+			<img src="logo.png" alt="Spot Majorana Logo"> <!-- Assicurati che logo.png si trovi nella stessa cartella di index.html -->
+		</div>
+		<div class="form-container">
+			<form id="spotForm">
+				<textarea id="spotMessage" rows="5" placeholder="Scrivi il tuo spot anonimo..." required></textarea>
+				<button type="submit">INVIA</button>
+			</form>
+			<p id="statusMessage"></p>
+		</div>
+		<div class="info-container">
+			<h1><strong>ATTENZIONE!</strong></h1>
+			<h3><strong>Piccoli ma grandi reminder</strong></h3>
+			<p>Ricordiamo a tutti che prese in giro e insulti non verranno pubblicati. Siate rispettosi per rendere questo progetto apprezzabile per tutti!</p>
+			<p>Il Majo Spotted resta attivo fino alle ore 21.00 circa, dopodichè i tell verranno postati direttamente il giorno dopo, appena uno dei gestori ha tempo.</p>
+			<p>Se qualcosa ci sfugge non esitate a contattarci.</p>
+			<p>Non verranno postati spot contenenti insulti, politica, calcio, opinioni su persone specifiche, informazioni personali (orientamento sessuale, fisico, ecc.) soprattutto se non fornite dalla persona stessa, pubblicità non riguardanti l’ambito scolastico, e nomi del personale scolastico (tranne per richiesta di informazioni).</p>
+			<p>Grazie per l’attenzione!♥️</p>
+			<a href="dashboard.html"><p>-Lo Staff</p></a>
+		</div>
+		<script src="script.js"></script>
+	</body>
+</html>

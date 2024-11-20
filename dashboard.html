@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
+  <title>Dashboard Gestori</title>
+  <style>
+    body { 
+      background-color: #25283D; 
+      color: white; 
+      font-family: 'Urbanist', sans-serif; 
+      padding: 20px; 
+    }
+
+    .spot { 
+      margin-bottom: 20px; 
+      padding: 10px; 
+      border: 1px solid white; 
+      border-radius: 5px; 
+    }
+
+    button { 
+      background-color: #5E81F4; 
+      color: white; 
+      border: none; 
+      padding: 10px; 
+      cursor: pointer; 
+    }
+
+    nav {
+      padding: 10px 20px;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      width: 200px;
+      height: auto;
+    }
+
+    .logo h1 {
+      margin: 0;
+      font-size: 50px;
+    }
+
+    .select-all {
+      margin-bottom: 10px;
+    }
+
+    .create-story-button {
+      background-color: #ff6f61;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <img src="logo.png" alt="Spot Majorana Logo">
+      <h1>Dashboard Spot</h1>
+    </div>    
+  </nav>
+
+  <div class="select-all">
+    <button onclick="createStory()" class="create-story-button">Crea Storia</button>
+  </div>
+
+  <div id="spotList"></div>
+
+  <script>
+let selectedSpots = [];
+
+// Funzione per recuperare gli spot
+async function fetchSpots() {
+  const response = await fetch("http://localhost:3000/api/get-spots");
+  const spots = await response.json();
+  const spotList = document.getElementById("spotList");
+  spotList.innerHTML = spots
+  .reverse() // Inverte l'ordine degli spot
+  .map((spot, index) => `
+    <div class="spot">
+      <input type="checkbox" id="spot${index}" data-index="${index}" onclick="toggleSelectSpot(${index})">
+      <p><strong>Spot #${index + 1}:</strong> ${spot.message}</p>
+      <p><em>Status: ${spot.status}</em></p>
+      <button onclick="approveSpot('${spot.id}')">Postato</button>
+      <button onclick="deleteSpot('${spot.id}')">Elimina</button>
+    </div>
+  `).join("");
+}
+
+// Funzione per selezionare/deselezionare uno spot
+function toggleSelectSpot(index) {
+  const spotIndex = selectedSpots.indexOf(index);
+  if (spotIndex === -1) {
+    selectedSpots.push(index);
+  } else {
+    selectedSpots.splice(spotIndex, 1);
+  }
+}
+
+// Funzione per segnare come postato uno spot
+async function approveSpot(id) {
+  const response = await fetch("http://localhost:3000/api/approve-spot", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  });
+  const result = await response.json();
+  if (result.success) {
+    alert("Spot segnato come postato!");
+    fetchSpots(); // Aggiorna gli spot
+  } else {
+    alert("Errore nel segnare lo spot come postato.");
+  }
+}
+
+// Funzione per eliminare uno spot
+async function deleteSpot(id) {
+  const response = await fetch("http://localhost:3000/api/delete-spot", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  });
+  const result = await response.json();
+  if (result.success) {
+    alert("Spot eliminato!");
+    fetchSpots(); // Aggiorna gli spot
+  } else {
+    alert("Errore nell'eliminare lo spot.");
+  }
+}
+
+// Funzione per creare la storia con gli spot selezionati
+function createStory() {
+  if (selectedSpots.length === 0) {
+    alert("Seleziona almeno uno spot per creare una storia!");
+    return;
+  }
+
+const storyText = selectedSpots
+  .map((index) => {
+    // Recupera solo il testo del messaggio, ignorando "Spot #n:"
+    const spotMessage = document.querySelector(`#spot${index} + p`).innerText;
+    return spotMessage.replace(/^Spot #[0-9]+:\s*/, ""); // Rimuove il prefisso
+  })
+  .join("\n\n");
+  
+  generateImage(storyText);
+}
+
+// Funzione per generare l'immagine della storia
+function generateImage(text) {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  // Imposta il canvas con dimensioni 1080x1920
+  canvas.width = 1080;
+  canvas.height = 1920;
+  ctx.fillStyle = "#25283D"; // Colore di sfondo
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Carichiamo il logo
+  const logo = new Image();
+  logo.src = "logo.png";
+  logo.onload = () => {
+    // Disegniamo il logo
+    ctx.drawImage(logo, (canvas.width - 377) / 2, 90, 377, (logo.height / logo.width) * 377);
+
+    // Definiamo le dimensioni e la posizione delle card
+    const cardWidth = 832;
+    const cardHeight = 200;
+    const cardMargin = 50;
+    let currentY = 250 + (logo.height / logo.width) * 377;
+
+    const spots = text.split("\n\n");
+    spots.forEach((spot, index) => {
+      // Disegna la card con gradiente alternato
+      const cardX = (canvas.width - cardWidth) / 2;
+      const gradient = ctx.createLinearGradient(cardX, currentY, cardX + cardWidth, currentY + cardHeight);
+      if (index % 2 === 0) {
+        gradient.addColorStop(0, "#4300FF");
+        gradient.addColorStop(1, "#FF5A62");
+      } else {
+        gradient.addColorStop(0, "#FF5A62");
+        gradient.addColorStop(1, "#4300FF");
+      }
+      ctx.fillStyle = gradient;
+      drawRoundedRect(ctx, cardX, currentY, cardWidth, cardHeight, 40);
+      ctx.fill();
+
+      // Scriviamo il testo centrato nella card con margini interni
+      ctx.fillStyle = "#fff";
+      ctx.font = "28px 'Urbanist', sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      const textX = canvas.width / 2;
+      const textY = currentY + cardHeight / 2;
+
+      const words = spot.split(" ");
+      let line = "";
+      const lineHeight = 35;
+      const maxTextWidth = cardWidth - 60;
+      let offsetY = -(lineHeight / 2);
+
+      words.forEach((word) => {
+        const testLine = line + word + " ";
+        const testWidth = ctx.measureText(testLine).width;
+        if (testWidth > maxTextWidth) {
+          ctx.fillText(line, textX, textY + offsetY);
+          line = word + " ";
+          offsetY += lineHeight;
+        } else {
+          line = testLine;
+        }
+      });
+      ctx.fillText(line, textX, textY + offsetY);
+
+      // Incrementiamo la posizione Y per la prossima card
+      currentY += cardHeight + cardMargin;
+    });
+
+    // Creiamo un link per scaricare l'immagine
+    const dataUrl = canvas.toDataURL();
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = "majo_spotted_story.png";
+    link.click();
+  };
+}
+
+// Funzione per disegnare un rettangolo con bordi arrotondati
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+// Carichiamo gli spot al caricamento della pagina
+fetchSpots();
+
+  </script>
+</body>
+</html>
