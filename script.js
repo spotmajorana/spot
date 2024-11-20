@@ -9,7 +9,7 @@ document.getElementById('spotForm').addEventListener('submit', async function(ev
   }
 
   try {
-    const response = await fetch('http://localhost:10000/api/send-spot', {
+    const response = await fetch('http://localhost:3000/api/send-spot', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

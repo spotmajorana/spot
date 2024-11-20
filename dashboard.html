@@ -78,7 +78,7 @@ let selectedSpots = [];
 
 // Funzione per recuperare gli spot
 async function fetchSpots() {
-  const response = await fetch("http://localhost:10000/api/get-spots");
+  const response = await fetch("http://localhost:3000/api/get-spots");
   const spots = await response.json();
   const spotList = document.getElementById("spotList");
   spotList.innerHTML = spots
@@ -106,7 +106,7 @@ function toggleSelectSpot(index) {
 
 // Funzione per segnare come postato uno spot
 async function approveSpot(id) {
-  const response = await fetch("http://localhost:10000/api/approve-spot", {
+  const response = await fetch("http://localhost:3000/api/approve-spot", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id }),
@@ -122,7 +122,7 @@ async function approveSpot(id) {
 
 // Funzione per eliminare uno spot
 async function deleteSpot(id) {
-  const response = await fetch("http://localhost:10000/api/delete-spot", {
+  const response = await fetch("http://localhost:3000/api/delete-spot", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id }),
