@@ -77,29 +77,21 @@
 let selectedSpots = [];
 
 // Funzione per recuperare gli spot
-const API_URL = "https://server-6rj6.onrender.com"; // URL pubblico su Render
-
 async function fetchSpots() {
-  const response = await fetch(`${API_URL}/api/get-spots`);
+  const response = await fetch("https://server-1wgq.onrender.com/api/get-spots");
   const spots = await response.json();
-  
-  console.log(spots); // Controlla se i dati arrivano correttamente
-  
   const spotList = document.getElementById("spotList");
-    spotList.innerHTML = spots
-      .reverse() // Inverte l'ordine degli spot
-      .map((spot, index) => `
-        <div class="spot">
-          <input type="checkbox" id="spot${index}" data-index="${index}" onclick="toggleSelectSpot(${index})">
-          <p><strong>Spot #${index + 1}:</strong> ${spot.message}</p>
-          <p><em>Status: ${spot.status}</em></p>
-          <button onclick="approveSpot('${spot.id}')">Postato</button>
-          <button onclick="deleteSpot('${spot.id}')">Elimina</button>
-        </div>
-      `).join("");
-  } catch (error) {
-    console.error("Errore durante il recupero degli spot:", error);
-  }
+  spotList.innerHTML = spots
+  .reverse() // Inverte l'ordine degli spot
+  .map((spot, index) => `
+    <div class="spot">
+      <input type="checkbox" id="spot${index}" data-index="${index}" onclick="toggleSelectSpot(${index})">
+      <p><strong>Spot #${index + 1}:</strong> ${spot.message}</p>
+      <p><em>Status: ${spot.status}</em></p>
+      <button onclick="approveSpot('${spot.id}')">Postato</button>
+      <button onclick="deleteSpot('${spot.id}')">Elimina</button>
+    </div>
+  `).join("");
 }
 
 // Funzione per selezionare/deselezionare uno spot
@@ -114,45 +106,35 @@ function toggleSelectSpot(index) {
 
 // Funzione per segnare come postato uno spot
 async function approveSpot(id) {
-  try {
-    const response = await fetch(`${API_URL}/api/approve-spot`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
-    const result = await response.json();
-    if (result.success) {
-      alert("Spot segnato come postato!");
-      fetchSpots(); // Aggiorna gli spot
-    } else {
-      alert("Errore nel segnare lo spot come postato.");
-    }
-  } catch (error) {
-    console.error("Errore durante l'approvazione dello spot:", error);
+  const response = await fetch("https://server-1wgq.onrender.com/api/approve-spot", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  });
+  const result = await response.json();
+  if (result.success) {
+    alert("Spot segnato come postato!");
+    fetchSpots(); // Aggiorna gli spot
+  } else {
+    alert("Errore nel segnare lo spot come postato.");
   }
-}
 }
 
 // Funzione per eliminare uno spot
 async function deleteSpot(id) {
-  try {
-    const response = await fetch(`${API_URL}/api/delete-spot`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
-    const result = await response.json();
-    if (result.success) {
-      alert("Spot eliminato!");
-      fetchSpots(); // Aggiorna gli spot
-    } else {
-      alert("Errore nell'eliminare lo spot.");
-    }
-  } catch (error) {
-    console.error("Errore durante l'eliminazione dello spot:", error);
+  const response = await fetch("https://server-1wgq.onrender.com/api/delete-spot", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  });
+  const result = await response.json();
+  if (result.success) {
+    alert("Spot eliminato!");
+    fetchSpots(); // Aggiorna gli spot
+  } else {
+    alert("Errore nell'eliminare lo spot.");
   }
 }
-
 
 // Funzione per creare la storia con gli spot selezionati
 function createStory() {
