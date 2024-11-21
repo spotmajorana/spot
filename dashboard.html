@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/png" href="favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Gestori</title>
   <style>
     body { 
@@ -12,6 +11,21 @@
       color: white; 
       font-family: 'Urbanist', sans-serif; 
       padding: 20px; 
+    }
+
+    .spot { 
+      margin-bottom: 20px; 
+      padding: 10px; 
+      border: 1px solid white; 
+      border-radius: 5px; 
+    }
+
+    button { 
+      background-color: #5E81F4; 
+      color: white; 
+      border: none; 
+      padding: 10px; 
+      cursor: pointer; 
     }
 
     nav {
@@ -35,120 +49,13 @@
       font-size: 50px;
     }
 
+    .select-all {
+      margin-bottom: 10px;
+    }
+
     .create-story-button {
-      display: block;
-      margin: 20px auto;
-      padding: 15px 20px;
-      font-size: 18px;
-      background-color: #CD3837;
-      color: white;
-      text-align: center;
-      width: 80%;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-    }
-
-    .create-story-button:hover {
-      background-color: #b82e2c;
-    }
-
-    .spot {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding: 10px;
-      border: 1px solid white;
-      border-radius: 5px;
-    }
-
-    .spot-content {
-      flex-grow: 1;
-    }
-
-    .spot-actions {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 10px;
-    }
-
-    button { 
-      background-color: #5E81F4; 
-      color: white; 
-      border: none; 
-      padding: 10px; 
-      border-radius: 5px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #4667D5;
-    }
-
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 40px;
-      height: 20px;
-    }
-
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      border-radius: 34px;
-      transition: 0.4s;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 14px;
-      width: 14px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      border-radius: 50%;
-      transition: 0.4s;
-    }
-
-    input:checked + .slider {
-      background-color: #CD3837;
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(20px);
-    }
-
-    @media (max-width: 768px) {
-      .spot {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .spot-actions {
-        flex-direction: row;
-        justify-content: space-between;
-        width: 100%;
-      }
-
-      button {
-        flex: 1;
-        font-size: 14px;
-      }
+      background-color: #ff6f61;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -160,7 +67,9 @@
     </div>    
   </nav>
 
-  <button onclick="createStory()" class="create-story-button">Crea Storia</button>
+  <div class="select-all">
+    <button onclick="createStory()" class="create-story-button">Crea Storia</button>
+  </div>
 
   <div id="spotList"></div>
 
@@ -173,21 +82,14 @@ async function fetchSpots() {
   const spots = await response.json();
   const spotList = document.getElementById("spotList");
   spotList.innerHTML = spots
-  .reverse()
+  .reverse() // Inverte l'ordine degli spot
   .map((spot, index) => `
     <div class="spot">
-      <div class="spot-content">
-        <p><strong>Spot #${index + 1}:</strong> ${spot.message}</p>
-        <p><em>Status: ${spot.status}</em></p>
-      </div>
-      <label class="toggle-switch">
-        <input type="checkbox" id="spot${index}" data-index="${index}" onclick="toggleSelectSpot(${index})">
-        <span class="slider"></span>
-      </label>
-      <div class="spot-actions">
-        <button onclick="approveSpot('${spot.id}')">Postato</button>
-        <button onclick="deleteSpot('${spot.id}')">Elimina</button>
-      </div>
+      <input type="checkbox" id="spot${index}" data-index="${index}" onclick="toggleSelectSpot(${index})">
+      <p><strong>Spot #${index + 1}:</strong> ${spot.message}</p>
+      <p><em>Status: ${spot.status}</em></p>
+      <button onclick="approveSpot('${spot.id}')">Postato</button>
+      <button onclick="deleteSpot('${spot.id}')">Elimina</button>
     </div>
   `).join("");
 }
@@ -244,7 +146,7 @@ function createStory() {
 const storyText = selectedSpots
   .map((index) => {
     // Recupera solo il testo del messaggio, ignorando "Spot #n:"
-    const spotMessage = document.querySelector(#spot${index} + p).innerText;
+    const spotMessage = document.querySelector(`#spot${index} + p`).innerText;
     return spotMessage.replace(/^Spot #[0-9]+:\s*/, ""); // Rimuove il prefisso
   })
   .join("\n\n");
@@ -349,6 +251,7 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
 
 // Carichiamo gli spot al caricamento della pagina
 fetchSpots();
+
   </script>
 </body>
 </html>
