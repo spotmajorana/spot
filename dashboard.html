@@ -63,46 +63,6 @@
       margin-left: 10px;
     }
 	
-	/* Creiamo lo stile per il toggle switch */
-	input[type="checkbox"] + label {
-	  position: relative;
-	  display: inline-block;
-	  width: 60px;
-	  height: 34px;
-	}
-
-	input[type="checkbox"] + label:before {
-	  content: '';
-	  position: absolute;
-	  cursor: pointer;
-	  top: 0;
-	  left: 0;
-	  right: 0;
-	  bottom: 0;
-	  background-color: #ccc;
-	  border-radius: 34px;
-	  transition: .4s;
-	}
-
-	input[type="checkbox"]:checked + label:before {
-	  background-color: #4CAF50;
-	}
-
-	input[type="checkbox"] + label:after {
-	  content: '';
-	  position: absolute;
-	  left: 4px;
-	  bottom: 4px;
-	  height: 26px;
-	  width: 26px;
-	  background-color: white;
-	  border-radius: 50%;
-	  transition: .4s;
-	}
-
-	input[type="checkbox"]:checked + label:after {
-	  transform: translateX(26px);
-	}
   </style>
 </head>
 <body>
@@ -133,7 +93,6 @@ async function fetchSpots() {
   .map((spot, index) => `
     <div class="spot">
       <input type="checkbox" id="spot${index}" data-index="${index}" onclick="toggleSelectSpot(${index})">
-	  <label for="spot${index}"></label>
       <p><strong>Spot #${index + 1}:</strong> ${spot.message}</p>
       <p><em>Status: ${spot.status}</em></p>
       <button onclick="approveSpot('${spot.id}')">Postato</button>
