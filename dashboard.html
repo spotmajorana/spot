@@ -196,7 +196,10 @@ function generateImage(text) {
     // Definiamo la larghezza della card
     const cardWidth = 832;
     const cardMargin = 50;
-    const bottomMargin = 30; // Margine inferiore per distanziare il testo dal bordo del rettangolo
+    const bottomMargin = 15; // Margine inferiore per distanziare il testo dal bordo del rettangolo
+    const topMargin = 15; // Margine superiore per distanziare il testo dal bordo del rettangolo
+    const leftMargin = 15; // Margine di sinistra per distanziare il testo dal bordo del rettangolo
+    const rightMargin = 15; // Margine di destra per distanziare il testo dal bordo del rettangolo
     let currentY = 250 + (logo.height / logo.width) * 377;
 
     const spots = text.split("\n\n");
