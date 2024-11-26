@@ -181,7 +181,9 @@ function generateImage(text) {
   // Imposta il canvas con dimensioni 1080x1920
   canvas.width = 1080;
   canvas.height = 1920;
-  ctx.fillStyle = "#25283D"; // Colore di sfondo
+  
+  // Imposta lo sfondo bianco
+  ctx.fillStyle = "#FFFFFF"; // Sfondo bianco
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // Carichiamo il logo
@@ -193,52 +195,63 @@ function generateImage(text) {
 
     // Definiamo le dimensioni e la posizione delle card
     const cardWidth = 832;
-    const cardHeight = 200;
     const cardMargin = 50;
     let currentY = 250 + (logo.height / logo.width) * 377;
 
     const spots = text.split("\n\n");
     spots.forEach((spot, index) => {
-      // Disegna la card con gradiente alternato
+      // Aggiustiamo la posizione e la dimensione della card per adattarsi al testo
       const cardX = (canvas.width - cardWidth) / 2;
-      const gradient = ctx.createLinearGradient(cardX, currentY, cardX + cardWidth, currentY + cardHeight);
-      if (index % 2 === 0) {
-        gradient.addColorStop(0, "#4300FF");
-        gradient.addColorStop(1, "#FF5A62");
-      } else {
-        gradient.addColorStop(0, "#FF5A62");
-        gradient.addColorStop(1, "#4300FF");
-      }
-      ctx.fillStyle = gradient;
-      drawRoundedRect(ctx, cardX, currentY, cardWidth, cardHeight, 40);
-      ctx.fill();
+      const lineHeight = 50; // Aumentato per migliorare la leggibilità
+      const maxTextWidth = cardWidth - 60; // Per non superare i bordi della card
+      let textHeight = 0; // Per calcolare l'altezza totale del testo
 
-      // Scriviamo il testo centrato nella card con margini interni
-      ctx.fillStyle = "#fff";
-      ctx.font = "28px 'Urbanist', sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      const textX = canvas.width / 2;
-      const textY = currentY + cardHeight / 2;
-
+      // Calcoliamo l'altezza totale necessaria per il testo
       const words = spot.split(" ");
       let line = "";
-      const lineHeight = 35;
-      const maxTextWidth = cardWidth - 60;
-      let offsetY = -(lineHeight / 2);
-
       words.forEach((word) => {
         const testLine = line + word + " ";
         const testWidth = ctx.measureText(testLine).width;
         if (testWidth > maxTextWidth) {
-          ctx.fillText(line, textX, textY + offsetY);
+          textHeight += lineHeight;
           line = word + " ";
-          offsetY += lineHeight;
         } else {
           line = testLine;
         }
       });
-      ctx.fillText(line, textX, textY + offsetY);
+      textHeight += lineHeight; // Aggiungi l'altezza dell'ultima linea
+
+      // Adattiamo l'altezza della card in base al testo
+      const cardHeight = textHeight + 40; // Aggiungiamo un padding
+
+      // Disegniamo il rettangolo con il colore #343434
+      ctx.fillStyle = "#343434"; // Colore del rettangolo
+      drawRoundedRect(ctx, cardX, currentY, cardWidth, cardHeight, 40);
+      ctx.fill();
+
+      // Scriviamo il testo centrato nella card con margini interni
+      ctx.fillStyle = "#fff"; // Colore del testo
+      ctx.font = "40px 'Urbanist', sans-serif"; // Testo più grande
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      const textX = canvas.width / 2;
+      let textY = currentY + cardHeight / 2;
+
+      let lineText = "";
+      const offsetY = -(lineHeight / 2);
+
+      words.forEach((word) => {
+        const testLine = lineText + word + " ";
+        const testWidth = ctx.measureText(testLine).width;
+        if (testWidth > maxTextWidth) {
+          ctx.fillText(lineText, textX, textY + offsetY);
+          lineText = word + " ";
+          textY += lineHeight;
+        } else {
+          lineText = testLine;
+        }
+      });
+      ctx.fillText(lineText, textX, textY + offsetY); // Scrivi l'ultima linea
 
       // Incrementiamo la posizione Y per la prossima card
       currentY += cardHeight + cardMargin;
@@ -267,7 +280,6 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
   ctx.quadraticCurveTo(x, y, x + radius, y);
   ctx.closePath();
 }
-
 
 // Carichiamo gli spot al caricamento della pagina
 fetchSpots();
