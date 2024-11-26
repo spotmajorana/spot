@@ -196,7 +196,6 @@ function generateImage(text) {
     // Definiamo la larghezza della card
     const cardWidth = 832;
     const cardMargin = 50;
-    const bottomMargin = 15; // Margine inferiore per distanziare il testo dal bordo del rettangolo
     let currentY = 250 + (logo.height / logo.width) * 377;
 
     const spots = text.split("\n\n");
@@ -222,7 +221,7 @@ function generateImage(text) {
       textHeight += lineHeight; // Aggiungi l'altezza dell'ultima linea
 
       // Altezza fissa di base, che si adatta se il testo è lungo
-      const cardHeight = Math.max(textHeight, 200) + bottomMargin; // Altezza minima di 200px, ma si adatta per testi lunghi, con margine inferiore
+      const cardHeight = Math.max(textHeight, 200); // Altezza minima di 200px, ma si adatta per testi lunghi
 
       // Disegniamo il rettangolo con il colore #343434
       ctx.fillStyle = "#343434"; // Colore del rettangolo
@@ -235,12 +234,11 @@ function generateImage(text) {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       const textX = canvas.width / 2;
-      let textY = currentY + 40; // Distanza iniziale dal bordo superiore della card
+      let textY = currentY + cardHeight / 2;
 
       let lineText = "";
       const offsetY = -(lineHeight / 2);
 
-      // Scrittura del testo riga per riga
       words.forEach((word) => {
         const testLine = lineText + word + " ";
         const testWidth = ctx.measureText(testLine).width;
