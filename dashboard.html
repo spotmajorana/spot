@@ -63,6 +63,18 @@
       margin-left: 10px;
     }
 	
+	/* Ingrandire il checkbox su schermi piccoli */
+	@media (max-width: 600px) {
+	  input[type="checkbox"] {
+		transform: scale(1.5);  /* Aumenta la dimensione del checkbox */
+		-webkit-transform: scale(1.5); /* Per compatibilità con WebKit */
+		-moz-transform: scale(1.5); /* Per compatibilità con Firefox */
+	  }
+
+	  label {
+		font-size: 18px;  /* Aumenta la dimensione del testo accanto al checkbox */
+	  }
+	}	
   </style>
 </head>
 <body>
@@ -92,7 +104,7 @@ async function fetchSpots() {
   .reverse() // Inverte l'ordine degli spot
   .map((spot, index) => `
     <div class="spot">
-      <input style="width: 50px;" type="checkbox" id="spot${index}" data-index="${index}" onclick="toggleSelectSpot(${index})">
+      <input type="checkbox" id="spot${index}" data-index="${index}" onclick="toggleSelectSpot(${index})">
       <p><strong>Spot #${index + 1}:</strong> ${spot.message}</p>
       <p><em>Status: ${spot.status}</em></p>
       <button onclick="approveSpot('${spot.id}')">Postato</button>
