@@ -57,6 +57,11 @@
       background-color: #ff6f61;
       margin-top: 20px;
     }
+
+    .delete-all-button {
+      background-color: #ff6f61;
+      margin-left: 10px;
+    }
   </style>
 </head>
 <body>
@@ -69,6 +74,7 @@
 
   <div class="select-all">
     <button onclick="createStory()" class="create-story-button">Crea Storia</button>
+    <button onclick="deleteAllSpots()" class="delete-all-button">Elimina Tutti gli Spot</button>
   </div>
 
   <div id="spotList"></div>
@@ -153,6 +159,29 @@ const storyText = selectedSpots
   
   generateImage(storyText);
 }
+
+ // Funzione per eliminare tutti gli spot
+    async function deleteAllSpots() {
+      if (!confirm("Sei sicuro di voler eliminare tutti gli spot?")) return;
+
+      try {
+        const response = await fetch("https://server-1wgq.onrender.com/api/delete-all-spots", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" }
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          alert("Tutti gli spot sono stati eliminati!");
+          fetchSpots(); // Aggiorna la lista degli spot
+        } else {
+          alert("Errore durante l'eliminazione di tutti gli spot.");
+        }
+      } catch (error) {
+        console.error("Errore:", error);
+        alert("C'è stato un problema nel contattare il server.");
+      }
+    }
 
 // Funzione per generare l'immagine della storia
 function generateImage(text) {
