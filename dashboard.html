@@ -193,18 +193,17 @@ function generateImage(text) {
     // Disegniamo il logo
     ctx.drawImage(logo, (canvas.width - 377) / 2, 90, 377, (logo.height / logo.width) * 377);
 
-    // Definiamo le dimensioni e la posizione delle card
+    // Definiamo la larghezza della card
     const cardWidth = 832;
     const cardMargin = 50;
     let currentY = 250 + (logo.height / logo.width) * 377;
 
     const spots = text.split("\n\n");
     spots.forEach((spot, index) => {
-      // Aggiustiamo la posizione e la dimensione della card per adattarsi al testo
       const cardX = (canvas.width - cardWidth) / 2;
-      const lineHeight = 50; // Aumentato per migliorare la leggibilità
       const maxTextWidth = cardWidth - 60; // Per non superare i bordi della card
-      let textHeight = 0; // Per calcolare l'altezza totale del testo
+      const lineHeight = 50; // Aumentato per migliorare la leggibilità
+      let textHeight = 0; // Per calcolare l'altezza totale necessaria per il testo
 
       // Calcoliamo l'altezza totale necessaria per il testo
       const words = spot.split(" ");
@@ -221,8 +220,8 @@ function generateImage(text) {
       });
       textHeight += lineHeight; // Aggiungi l'altezza dell'ultima linea
 
-      // Adattiamo l'altezza della card in base al testo
-      const cardHeight = textHeight + 40; // Aggiungiamo un padding
+      // Altezza fissa di base, che si adatta se il testo è lungo
+      const cardHeight = Math.max(textHeight, 200); // Altezza minima di 200px, ma si adatta per testi lunghi
 
       // Disegniamo il rettangolo con il colore #343434
       ctx.fillStyle = "#343434"; // Colore del rettangolo
