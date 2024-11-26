@@ -93,6 +93,7 @@ async function fetchSpots() {
   .map((spot, index) => `
     <div class="spot">
       <input type="checkbox" id="spot${index}" data-index="${index}" onclick="toggleSelectSpot(${index})">
+	  <label for="spot${index}"></label> <!-- Label che agisce come il toggle switch -->
       <p><strong>Spot #${index + 1}:</strong> ${spot.message}</p>
       <p><em>Status: ${spot.status}</em></p>
       <button onclick="approveSpot('${spot.id}')">Postato</button>
