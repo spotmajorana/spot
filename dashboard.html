@@ -235,7 +235,7 @@ function generateImage(text) {
       // Scriviamo il testo centrato nella card con margini interni
       ctx.fillStyle = "#fff"; // Colore del testo
       ctx.font = "40px 'Urbanist', sans-serif"; // Testo più grande
-      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
       const textX = canvas.width / 2;
       let textY = currentY + 40; // Distanza iniziale dal bordo superiore della card
 
